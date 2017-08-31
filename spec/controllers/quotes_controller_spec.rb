@@ -113,9 +113,18 @@ RSpec.describe QuotesController, type: :controller do
 
   describe 'GET #new' do
     it 'renders a new form' do
-      sign_in create(:company)
+      company = create(:company)
+      sign_in company
+      order = create(:order, company_id: company.id)
+      credit = create(:credit, order_id: order.id)
       get :new
       expect(response).to render_template("new.html.erb")
+    end
+
+    it "is invalid if company does not have any tokens" do
+      sign_in create(:company)
+      get :new
+      expect(response).to redirect_to('/')
     end
   end
 

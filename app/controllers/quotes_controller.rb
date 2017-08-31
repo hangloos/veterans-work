@@ -19,7 +19,14 @@ class QuotesController < ApplicationController
   def new
     @quote = Quote.new
     @quote.customer_request_id = params[:customer_request_id]
+    
+    if !check_credits
+      flash[:notice] = "Sorry, you don't have enough tokens to quote this project."
+      #send them to buy credits
+      redirect_to '/'
+    else
     render "new.html.erb"
+    end
   end
 
   def create
@@ -73,6 +80,10 @@ class QuotesController < ApplicationController
       company_id: current_company.id,
       customer_request_id: params[:customer_request_id]
     )
+  end
+
+  def check_credits
+    current_company.credits.count > 0   
   end
 
   def sanitize_blank_costs(quote)
