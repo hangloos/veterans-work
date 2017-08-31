@@ -35,6 +35,8 @@ class QuotesController < ApplicationController
     if has_fewer_than_3_siblings?(@quote)
       if @quote.save
         flash[:notice] = "New Quote created successfully!"
+        @company = @quote.company
+        @company.orders[0].credits[0].delete
         redirect_to '/customer_requests'
       else
         flash[:notice] = "Sorry, the quote did not save. Please try again. #{@quote.errors.full_messages.join(', ')}."
