@@ -12,6 +12,5 @@
 
 class Credit < ApplicationRecord
   belongs_to :order
-  delegate :company, to: :order
 
 end
